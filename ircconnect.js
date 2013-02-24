@@ -1,9 +1,9 @@
 var socketId;
 var dataFromRead = "";
-var serverConnect = "10.0.1.28";
+var serverConnect = "irc.freenode.net";
 var ircPort = 6667;
 var serverName;
-var channelName ="#realtestchannel";
+var channelName ="#optimism";
 var timeOfLastChanMsg = new Date();
 timeOfLastChanMsg.setTime(1); //initialize the time to 1.
 var silentTimeMin=.5;
