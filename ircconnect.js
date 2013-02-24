@@ -5,7 +5,7 @@ var ircPort = 6667;
 var serverName;
 var channelName ="#realtestchannel";
 var timeOfLastChanMsg = new Date();
-timeOfLastChanMsg.setTime(1); //initialize the time to 1. 
+timeOfLastChanMsg.setTime(1); //initialize the time to 1.
 var silentTimeMin=.5;
 
 
@@ -71,12 +71,12 @@ function onDisconnected()
   chrome.socket.disconnect(socketId);
 } // end onDisconnected
 
-function write(s, f) 
+function write(s, f)
 {
   s+="\r\n";
   console.log(s);
 
-  //Make sure we're not spamming the channel. If this is going to the channel, check to see how often we're sending. 
+  //Make sure we're not spamming the channel. If this is going to the channel, check to see how often we're sending.
 
   if (s.search("PRIVMSG "+channelName)>-1)
    {
