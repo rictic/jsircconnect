@@ -4,6 +4,24 @@ var serverConnect = "10.0.1.28";
 var ircPort = 6667;
 var serverName;
 var channelName ="#realtestchannel";
+var timeOfLastChanMsg = new Date();
+timeOfLastChanMsg.setTime(1); //initialize the time to 1. 
+var silentTimeMin=.5;
+
+
+//OptimistBot Sayings
+var goodVibes = ["Great job team!","Wow! I can't believe how much headway we're making!",
+"That's a great point! Let's explore this perspective with bit more dicussion. ",
+"Keep up the great work team! This discussion is fascinating!",
+"This is very encouraging. We are reaching our goals by talking things out.",
+"All of these are great ideas! Let's keep going and get everyone's contribution.",
+"Congratulations team! Great work so far!",
+"Thanks for mentioning that. That's a perspective I've never thought about before.",
+"All right! Fantastic point!",
+"Just wanted to throw in my two cents- you're all doing a dynamite job here!",
+"That's one thing I love about this channel- the truly diverse ideas being discussed. Great job!",
+"I like that. Let's brainstorm some more on this idea.",
+];
 
 var userName;
 chrome.storage.local.get('userName', function(results)
@@ -45,12 +63,39 @@ function onDisconnected()
   chrome.socket.disconnect(socketId);
 } // end onDisconnected
 
-function write(s, f) {
+function write(s, f) 
+{
   s+="\r\n";
   console.log(s);
-  displayLineToScreen("[sent] " + s);
-  chrome.socket.write(socketId, str2ab(s), function(good) {console.log('write was ', good); if (f) f();});
-}
+
+  //Make sure we're not spamming the channel. If this is going to the channel, check to see how often we're sending. 
+
+  if (s.search("PRIVMSG "+channelName)>-1)
+   {
+    //should we write this?
+    var dateObj = new Date();
+    if (dateObj.getTime()-timeOfLastChanMsg.getTime()>silentTimeMin*60000)
+    {
+      displayLineToScreen("[sent] " + s);
+      chrome.socket.write(socketId, str2ab(s), function(good) {console.log('write was ', good); if (f) f();});
+      timeOfLastChanMsg.setTime(dateObj.getTime());
+    }
+    else
+    {
+      console.log("You don't get to write because you messaged the channel already. dateObj.getTime: ")
+      console.log(dateObj.getTime());
+      console.log("Time of timeOfLastChanMsg")
+      console.log(timeOfLastChanMsg.getTime());
+      console.log(dateObj.getTime()-timeOfLastChanMsg.getTime())
+      console.log(dateObj.getTime()-timeOfLastChanMsg.getTime()<silentTimeMin*60000)
+    }
+  }
+  else
+  {
+    displayLineToScreen("[sent] " + s);
+    chrome.socket.write(socketId, str2ab(s), function(good) {console.log('write was ', good); if (f) f();});
+  }
+}//end write
 
 function str2ab(str)
 {
