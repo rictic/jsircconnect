@@ -170,7 +170,7 @@ function readForever(readInfo)
     for (var i = 0; i < messageLines.length; i++)
     {
       displayLineToScreen(messageLines[i]);
-		}
+    }
 
     //get server name
     if(!serverName)
@@ -181,7 +181,7 @@ function readForever(readInfo)
     for(var i = 0; i < serverMessages.length; ++i)
     {
       var m = serverMessages[i];
-			console.log(m.command, m);
+      console.log(m.command, m);
       switch(m.command)
       {
         //Welcome message!
@@ -189,14 +189,14 @@ function readForever(readInfo)
           write('JOIN ' + channelName);
           break;
         case "PING":
-					write("PONG :"+serverName);
-					displayLineToScreen('[SERVER PONG]');
+          write("PONG :"+serverName);
+          displayLineToScreen('[SERVER PONG]');
           break;
         case "PRIVMSG":
           handlePrivmsg(m);
           break;
         default:
-					//All this spew is a bit annoying.
+          //All this spew is a bit annoying.
           //console.log("WARN: Unhandled message: ", m);
           break;
       }
@@ -239,30 +239,30 @@ function crackMessage(serverLine) {
 }
 
 function handlePrivmsg(message) {
-	//This is a message to the channel:
-	if(message.username === channelName)
-	{
-		for(var i = 0; i < message.args.length; ++i)
-		{
-			var arg = message.args[i];
-			//Slice off the colon from the first arg.
-			//FIXME: We should do this fixup elsewhere.
-			if(i === 0)
-			{
-				arg = arg.substring(1);
-			}
-			if(arg.search(userName) != -1)
-			{
-				write("PRIVMSG " + channelName + " :I LIKE RAINBOWS?");
-			}
-		}
-	}
-	//If not, it must be a message to me.
-	else
-	{
-		var messagingUser = message.prefix.slice(1, message.prefix.search("!"));
-		write("PRIVMSG " + messagingUser + " :I LIKE RAINBOWS!?");
-	}
+  //This is a message to the channel:
+  if(message.username === channelName)
+  {
+    for(var i = 0; i < message.args.length; ++i)
+    {
+      var arg = message.args[i];
+      //Slice off the colon from the first arg.
+      //FIXME: We should do this fixup elsewhere.
+      if(i === 0)
+      {
+        arg = arg.substring(1);
+      }
+      if(arg.search(userName) != -1)
+      {
+        write("PRIVMSG " + channelName + " :I LIKE RAINBOWS?");
+      }
+    }
+  }
+  //If not, it must be a message to me.
+  else
+  {
+    var messagingUser = message.prefix.slice(1, message.prefix.search("!"));
+    write("PRIVMSG " + messagingUser + " :I LIKE RAINBOWS!?");
+  }
 }
 
 function displayLineToScreen(text)
